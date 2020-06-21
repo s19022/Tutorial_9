@@ -263,7 +263,7 @@ namespace LinqConsoleApp
         /// <summary>
         /// SELECT Job AS EmployeeJob, COUNT(1) EmployeeNuber FROM Emps GROUP BY Job;
         /// </summary>
-        public void Task7()
+        public void Task7()         
         {
             var res = Emps.Select(e => new { EmployeeJob = e.Job
                 //, Count = Emps.Where(e1 => e1.Empno == e.Empno).Count().ToString
@@ -297,20 +297,29 @@ namespace LinqConsoleApp
         /// </summary>
         public void Task10()
         {
-           
+          
+            var res = Emps.Select(emp => new { Ename = emp.Ename, Job = emp.Job, HireDate = emp.HireDate })
+                .Union
+                    (Emps.Where(emp => emp.Ename.Contains("No value") && emp.Job == null && emp.HireDate == null)
+                    .Select(emp => new { Ename = emp.Ename, Job = emp.Job, HireDate = emp.HireDate }));
+
         }
 
         //Find the employee with the highest salary using the Aggregate () method
         public void Task11()
         {
-            
+             var res = Emps.Aggregate((emp, emp2) => emp.Salary > emp2.Salary ? emp : emp2);   
         }
 
         //Using the LINQ language and the SelectMany method, 
         //perform a CROSS JOIN join between collections Emps and Depts
         public void Task12()
         {
-            
+            var res = Emps.SelectMany(emp => Depts, (emp, dept) => new
+            {
+                Employee = emp,
+                Department = dept
+            });
         }
     }
 }
